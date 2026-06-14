@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeetCode Logic Assistant</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🧠</span>
+        <div class="logo-text">
+          <h1>Logic Assistant</h1>
+          <p>Think. Don't copy.</p>
+        </div>
+      </div>
+      <div class="status-indicator" id="statusIndicator">
+        <span class="status-dot"></span>
+        <span class="status-text">Ready</span>
+      </div>
+    </header>
+
+    <!-- API Key Input (Shown if not set) -->
+    <div class="api-key-section" id="apiKeySection">
+      <div class="section">
+        <h3>🔑 API Key Required</h3>
+        <p class="helper-text">Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></p>
+        <input type="password" id="apiKeyInput" placeholder="Paste your Gemini API key here (starts with AIza...)" class="api-input">
+        <button id="saveKeyBtn" class="btn btn-primary">Save API Key</button>
+        <p class="helper-text small">Your key is stored locally and never shared.</p>
+      </div>
+    </div>
+
+    <!-- No Code Mode Toggle -->
+    <!-- No Code Mode Toggle -->
+<div class="nocode-section" id="noCodeSection" style="display: none;">
+  <div class="toggle-container">
+    <label class="switch">
+      <input type="checkbox" id="noCodeToggle" checked>
+      <span class="slider round"></span>
+    </label>
+    <div class="toggle-label">
+      <span class="toggle-title">🔒 No Code Mode</span>
+      <span class="toggle-subtitle">Prevent early solution exposure</span>
+    </div>
+  </div>
+</div>
+
+    <!-- Problem Info -->
+    <div class="problem-info" id="problemInfo" style="display: none;">
+      <div class="loading-state" id="loadingState">
+        <div class="spinner"></div>
+        <p>Extracting problem...</p>
+      </div>
+      <div class="problem-title" id="problemTitle" style="display: none;"></div>
+    </div>
+
+    <!-- Tab Grid -->
+    <nav class="tab-grid" id="tabGrid" style="display: none;">
+      <button class="tab-btn active" data-tab="analysis">
+        <span class="tab-icon">📊</span>
+        <span class="tab-text">Analysis</span>
+      </button>
+      <button class="tab-btn" data-tab="intuition">
+        <span class="tab-icon">💡</span>
+        <span class="tab-text">Intuition</span>
+      </button>
+      <button class="tab-btn" data-tab="approach">
+        <span class="tab-icon">🛠️</span>
+        <span class="tab-text">Approach</span>
+      </button>
+      <button class="tab-btn" data-tab="dryrun">
+        <span class="tab-icon">🧪</span>
+        <span class="tab-text">Dry Run</span>
+      </button>
+      <button class="tab-btn" data-tab="code" id="codeTab">
+        <span class="tab-icon">💻</span>
+        <span class="tab-text">Code</span>
+      </button>
+      <button class="tab-btn refresh-btn" id="refreshBtn">
+        <span class="tab-icon">🔄</span>
+        <span class="tab-text">Refresh</span>
+      </button>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="content-area" id="contentArea" style="display: none;">
+      <!-- Analysis Tab -->
+      <div class="tab-content active" id="analysis-content">
+        <div class="section">
+          <h3>🏢 Companies Asked</h3>
+          <div class="companies-grid" id="companiesGrid">
+            <span class="placeholder-text">Click Analyze to see companies...</span>
+          </div>
+        </div>
+        <div class="section">
+          <h3>📝 Explanation</h3>
+          <div class="text-content" id="explanationText">Problem explanation will appear here...</div>
+        </div>
+        <div class="section">
+          <h3>📋 Example Walkthrough</h3>
+          <div class="text-content example-box" id="exampleText">Example will appear here...</div>
+        </div>
+      </div>
+
+      <!-- Intuition Tab -->
+      <div class="tab-content" id="intuition-content">
+        <div class="section intuition-card">
+          <h3>🤔 How to Think</h3>
+          <div class="text-content" id="thinkingText">Thinking guide will appear here...</div>
+        </div>
+        <div class="section hint-card">
+          <h3>💭 Hint</h3>
+          <div class="text-content" id="hintText">Hint will appear here...</div>
+        </div>
+        <div class="section pattern-card">
+          <h3>🎯 Pattern Recognition</h3>
+          <div class="text-content" id="patternText">Pattern will appear here...</div>
+        </div>
+        <div class="section warning-card">
+          <h3>⚠️ Common Mistake</h3>
+          <div class="text-content" id="mistakeText">Common mistakes will appear here...</div>
+        </div>
+      </div>
+
+      <!-- Approach Tab -->
+      <div class="tab-content" id="approach-content">
+        <div class="approach-sections">
+          <div class="approach-card brute">
+            <div class="approach-header">
+              <h3>🐢 Brute Force</h3>
+              <div class="complexity-badges">
+                <span class="badge time" id="bruteTime">-</span>
+                <span class="badge space" id="bruteSpace">-</span>
+              </div>
+            </div>
+            <div class="text-content" id="bruteSteps">Steps will appear here...</div>
+          </div>
+
+          <div class="arrow-divider">↓</div>
+
+          <div class="approach-card better">
+            <div class="approach-header">
+              <h3>⚡ Better</h3>
+              <div class="complexity-badges">
+                <span class="badge time" id="betterTime">-</span>
+                <span class="badge space" id="betterSpace">-</span>
+              </div>
+            </div>
+            <div class="text-content" id="betterSteps">Steps will appear here...</div>
+          </div>
+
+          <div class="arrow-divider">↓</div>
+
+          <div class="approach-card optimal">
+            <div class="approach-header">
+              <h3>🚀 Optimal</h3>
+              <div class="complexity-badges">
+                <span class="badge time" id="optimalTime">-</span>
+                <span class="badge space" id="optimalSpace">-</span>
+              </div>
+            </div>
+            <div class="text-content" id="optimalSteps">Steps will appear here...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dry Run Tab -->
+      <div class="tab-content" id="dryrun-content">
+        <div class="section dryrun-section">
+          <h3>🧮 Step-by-Step Execution</h3>
+          <div class="dryrun-content" id="dryrunText">Dry run will appear here...</div>
+        </div>
+      </div>
+
+      <!-- Code Tab -->
+      <div class="tab-content" id="code-content">
+        <div class="code-blocked" id="codeBlocked">
+          <div class="blocked-icon">🔒</div>
+          <h3>Code Locked</h3>
+          <p>Turn off "No Code Mode" to view solutions</p>
+          <button class="unlock-btn" id="unlockBtn">Unlock Now</button>
+        </div>
+        
+        <div class="code-container" id="codeContainer" style="display: none;">
+          <div class="lang-selector">
+            <button class="lang-btn active" data-lang="python">Python</button>
+            <button class="lang-btn" data-lang="java">Java</button>
+            <button class="lang-btn" data-lang="cpp">C++</button>
+            <button class="lang-btn" data-lang="c">C</button>
+          </div>
+          <pre class="code-block"><code id="codeDisplay">Select a language...</code></pre>
+          <button class="copy-btn" id="copyBtn">📋 Copy</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Analyze Button (Floating) -->
+    <div class="analyze-section" id="analyzeSection" style="display: none;">
+      <button id="analyzeBtn" class="btn btn-analyze">
+        <span class="btn-icon">🧠</span> Analyze Problem
+      </button>
+    </div>
+
+    <!-- Error/Loading States -->
+    <div class="overlay" id="overlay" style="display: none;">
+      <div class="overlay-content">
+        <div class="spinner"></div>
+        <p>Analyzing problem with AI...</p>
+        <p class="sub-text">This may take 10-20 seconds</p>
+      </div>
+    </div>
+
+    <div class="error-toast" id="errorToast" style="display: none;">
+      <span class="error-icon">⚠️</span>
+      <span id="errorMessage"></span>
+      <button id="closeErrorBtn">×</button>
+    </div>
+  </div>
+
+  <script src="panel.js"></script>
+</body>
+</html>
